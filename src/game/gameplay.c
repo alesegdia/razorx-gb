@@ -9,21 +9,23 @@
 #include "assets/razorx_gfx.h"
 #include "assets/tiles_gfx.h"
 
-fixed player_y;
-fixed scroll_counter;
+UBYTE last_brush_y;
 UBYTE player_x_tile;
 UBYTE free_tile;
-fixed speed;
-fixed last_tile_pos;
 unsigned char player_tile;
+fixed speed;
+fixed last_brush_x;
+fixed player_y;
+fixed scroll_counter;
 
 void game_start()
 {
-	last_tile_pos.w = 0;
+	last_brush_x.w = 0;
 	free_tile = 0;
 	player_x_tile = PLAYER_START_X;
-	scroll_counter.w = 0;
-	speed.w = 0x0050;
+	scroll_counter.w = player_y.w;
+	last_brush_y = 0;
+	speed.w = 0x0900;
 
 	// load background
 	set_bkg_data(0, 2, maptiles);
@@ -41,16 +43,52 @@ UBYTE prev_right;
 
 unsigned char row[32] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
+#define USE_BRUSH_Y 0
+
+void clear_row()
+{
+#ifdef USE_BRUSH_Y
+	set_bkg_tiles( 1, -last_brush_y, 32, 1, row );
+#else
+	set_bkg_tiles( 1, -player_y.b.h / 8, 32, 1, row );
+#endif
+}
+
+void advance_brush_y()
+{
+	last_brush_y += 1;
+	if( last_brush_y >= 32 ) last_brush_y = 0;
+}
+
+/**
+ * Paints a tile in the track with y fixed to @last_brush_y value
+ */
+void paint( UBYTE x )
+{
+#ifdef USE_BRUSH_Y
+	set_bkg_tiles( x, -last_brush_y, 1, 1, &free_tile );
+#else
+	set_bkg_tiles( x, -player_y.b.h / 8, 1, 1, &free_tile );
+#endif
+}
+
+void linear_brush_translation()
+{
+	last_brush_x.w += 0x10;
+	if( last_brush_x.w > 0x0800 )
+	{
+		last_brush_x.w = 0x0100;
+	}
+}
 
 void scroll()
 {
-	set_bkg_tiles( 1, -player_y.b.h / 8, 32, 1, row );
-	set_bkg_tiles( last_tile_pos.b.h, -player_y.b.h / 8, 1, 1, &free_tile );
-	last_tile_pos.w += 0x50;
-	if( last_tile_pos.w > 0x0800 )
-	{
-		last_tile_pos.w = 0x0100;
-	}
+	advance_brush_y();
+	clear_row();
+	paint( last_brush_x.b.h );
+
+	// brush translation
+	linear_brush_translation();
 }
 
 void draw_player()
@@ -96,7 +134,17 @@ void gameplay(UBYTE joypad_state)
 		scroll();
 	}
 
-	get_bkg_tiles( player_x_tile, player_y.b.h / 8, 1, 1, &player_tile );
+	get_bkg_tiles( player_x_tile, -player_y.b.h / 8, 1, 1, &player_tile );
+
+	if( player_tile == 0 )
+	{
+		//speed.w += 0x0010;
+	}
+	else if( speed.w > 0x0050 )
+	{
+		//speed.w -= 0x0001;
+	}
+
 	move_bkg(0, -player_y.b.h);
 
 	draw_player();
