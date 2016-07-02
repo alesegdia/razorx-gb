@@ -5,6 +5,7 @@
 #include "game/defs.h"
 #include "track.h"
 #include "painter.h"
+#include "filter.h"
 
 // graphics
 #include "assets/razorx_gfx.h"
@@ -33,6 +34,8 @@ painter_t painter;
 
 void game_start()
 {
+	initrand(0xDEAD);
+
 	// setup brushing
 	painter_initialize( &painter );
 	scroll_counter.w = player_y.w;
@@ -47,6 +50,9 @@ void game_start()
 	set_bkg_tiles(0, 0, lvl0_map.width, lvl0_map.height, lvl0_map.data);
 
 	// load sprite
+	// negate( sprite, 16 );
+	// randomize( sprite, 16 );
+	shuffle( sprite, 16 );
 	set_sprite_data(0, 1, sprite);
 	set_sprite_tile(0, 0);
 }
