@@ -4,6 +4,7 @@
 #include "gameplay.h"
 #include "game/defs.h"
 #include "track.h"
+#include "brush.h"
 
 // graphics
 #include "assets/razorx_gfx.h"
@@ -13,16 +14,14 @@ UBYTE last_brush_y;
 UBYTE player_x_tile;
 UBYTE free_tile;
 UBYTE player_tile;
-UBYTE sign;
 fixed speed;
-fixed last_brush_x;
 fixed player_y;
 fixed scroll_counter;
+brush_t brush;
 
 void game_start()
 {
-	sign = 1;
-	last_brush_x.w = 0x0800;
+	brush_initialize( &brush );
 	free_tile = 0;
 	player_x_tile = PLAYER_START_X;
 	scroll_counter.w = player_y.w;
@@ -64,36 +63,13 @@ void paint( UBYTE x )
 	set_bkg_tiles( x, -player_y.b.h / 8, 1, 1, &free_tile );
 }
 
-void linear_brush_translation()
-{
-	if( sign == 0 )
-	{
-		last_brush_x.w += 0x10;
-	}
-	else
-	{
-		last_brush_x.w -= 0x10;
-	}
-
-	if( sign == 0 && last_brush_x.w >= 0x1200 )
-	{
-		sign = 1;
-		last_brush_x.w = 0x1200;
-	}
-	if( sign == 1 && last_brush_x.w < 0x0100 )
-	{
-		sign = 0;
-		last_brush_x.w = 0x0100;
-	}
-}
-
 void scroll()
 {
 	advance_brush_y();
 	player_y.b.h = last_brush_y * 8;
-	linear_brush_translation();
+	brush_linear_translation( &brush );
 	clear_row();
-	paint( last_brush_x.b.h );
+	paint( brush.x.b.h );
 }
 
 void draw_player()

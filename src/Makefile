@@ -11,8 +11,8 @@ all:	razorx.gb
 %.o:	%.s
 	$(CC) -c -o $@ $<
 
-razorx.gb:	razorx.o game/map.o game/gameplay.o
-	$(CC) -o razorx.gb razorx.o game/gameplay.o game/map.o $<
+razorx.gb:	razorx.o game/map.o game/gameplay.o game/brush.o
+	$(CC) -o razorx.gb razorx.o game/gameplay.o game/map.o game/brush.o $<
 
 clean:
 	rm -f *.o *.lst *.map *.gb *~ *.rel *.cdb *.ihx *.lnk *.sym *.asm
