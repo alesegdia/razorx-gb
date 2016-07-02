@@ -129,7 +129,7 @@ void gameplay(UBYTE joypad_state)
 		scroll();
 	}
 
-	get_bkg_tiles( player_x_tile, -player_y.b.h / 8, 1, 1, &player_tile );
+	get_bkg_tiles( player_x_tile - 1, player_y.b.h / 8, 1, 1, &player_tile );
 
 	if( player_tile == 0 )
 	{
