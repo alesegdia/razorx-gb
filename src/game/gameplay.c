@@ -12,7 +12,7 @@
 UBYTE last_brush_y;
 UBYTE player_x_tile;
 UBYTE free_tile;
-unsigned char player_tile;
+UBYTE player_tile;
 fixed speed;
 fixed last_brush_x;
 fixed player_y;
@@ -43,15 +43,9 @@ UBYTE prev_right;
 
 unsigned char row[32] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
-#define USE_BRUSH_Y 0
-
 void clear_row()
 {
-#ifdef USE_BRUSH_Y
-	set_bkg_tiles( 1, -last_brush_y, 32, 1, row );
-#else
 	set_bkg_tiles( 1, -player_y.b.h / 8, 32, 1, row );
-#endif
 }
 
 void advance_brush_y()
@@ -65,11 +59,7 @@ void advance_brush_y()
  */
 void paint( UBYTE x )
 {
-#ifdef USE_BRUSH_Y
-	set_bkg_tiles( x, -last_brush_y, 1, 1, &free_tile );
-#else
 	set_bkg_tiles( x, -player_y.b.h / 8, 1, 1, &free_tile );
-#endif
 }
 
 void linear_brush_translation()
@@ -84,11 +74,10 @@ void linear_brush_translation()
 void scroll()
 {
 	advance_brush_y();
+	player_y.b.h = last_brush_y * 8;
+	linear_brush_translation();
 	clear_row();
 	paint( last_brush_x.b.h );
-
-	// brush translation
-	linear_brush_translation();
 }
 
 void draw_player()
