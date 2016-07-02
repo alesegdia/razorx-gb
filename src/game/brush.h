@@ -9,7 +9,10 @@ typedef struct
 	UBYTE sign;
 } brush_t;
 
-void brush_initialize( brush_t* brush );
+#define brush_initialize(b, s, v) \
+	b.sign = s; \
+	b.x.w = v
+
 void brush_linear_translation( brush_t* brush );
 
 #endif
