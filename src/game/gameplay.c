@@ -4,7 +4,7 @@
 #include "gameplay.h"
 #include "game/defs.h"
 #include "track.h"
-#include "brush.h"
+#include "painter.h"
 
 // graphics
 #include "assets/razorx_gfx.h"
@@ -29,13 +29,12 @@ fixed speed;
 // used for not skipping a line in the painting
 fixed scroll_counter;
 
-// single brush to use (by now)
-brush_t brush;
+painter_t painter;
 
 void game_start()
 {
 	// setup brushing
-	brush_initialize( brush, 1, 0x0300 );
+	painter_initialize( &painter );
 	scroll_counter.w = player_y.w;
 	last_brush_y = 0;
 
@@ -66,22 +65,12 @@ void advance_brush_y()
 	if( last_brush_y >= 32 ) last_brush_y = 0;
 }
 
-/**
- * Paints a tile in the track with y fixed to @last_brush_y value
- */
-void paint( UBYTE x )
-{
-	UBYTE free_tile = 0;
-	set_bkg_tiles( x, -player_y.b.h / 8, 1, 1, &free_tile );
-}
-
 void scroll()
 {
 	advance_brush_y();
 	player_y.b.h = last_brush_y * 8;
-	brush_linear_translation( &brush );
 	clear_row();
-	paint( brush.x.b.h );
+	painter_scroll( &painter, -player_y.b.h / 8 );
 }
 
 void draw_player()
