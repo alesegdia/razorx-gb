@@ -13,6 +13,7 @@ UBYTE last_brush_y;
 UBYTE player_x_tile;
 UBYTE free_tile;
 UBYTE player_tile;
+UBYTE sign;
 fixed speed;
 fixed last_brush_x;
 fixed player_y;
@@ -20,7 +21,8 @@ fixed scroll_counter;
 
 void game_start()
 {
-	last_brush_x.w = 0;
+	sign = 1;
+	last_brush_x.w = 0x0800;
 	free_tile = 0;
 	player_x_tile = PLAYER_START_X;
 	scroll_counter.w = player_y.w;
@@ -64,9 +66,23 @@ void paint( UBYTE x )
 
 void linear_brush_translation()
 {
-	last_brush_x.w += 0x10;
-	if( last_brush_x.w > 0x0800 )
+	if( sign == 0 )
 	{
+		last_brush_x.w += 0x10;
+	}
+	else
+	{
+		last_brush_x.w -= 0x10;
+	}
+
+	if( sign == 0 && last_brush_x.w >= 0x1200 )
+	{
+		sign = 1;
+		last_brush_x.w = 0x1200;
+	}
+	if( sign == 1 && last_brush_x.w < 0x0100 )
+	{
+		sign = 0;
 		last_brush_x.w = 0x0100;
 	}
 }
