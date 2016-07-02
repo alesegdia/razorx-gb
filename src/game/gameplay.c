@@ -10,36 +10,47 @@
 #include "assets/razorx_gfx.h"
 #include "assets/tiles_gfx.h"
 
+// last y position of the brush
 UBYTE last_brush_y;
+
+// player x position in tiles
 UBYTE player_x_tile;
-UBYTE free_tile;
-UBYTE player_tile;
-fixed speed;
+
+// player y position in pixels; using fixed
 fixed player_y;
+
+// previous values of left and right buttons
+UBYTE prev_left;
+UBYTE prev_right;
+
+// player vertical speed
+fixed speed;
+
+// used for not skipping a line in the painting
 fixed scroll_counter;
+
+// single brush to use (by now)
 brush_t brush;
 
 void game_start()
 {
+	// setup brushing
 	brush_initialize( &brush );
-	free_tile = 0;
-	player_x_tile = PLAYER_START_X;
 	scroll_counter.w = player_y.w;
 	last_brush_y = 0;
-	speed.w = 0x0900;
+
+	// setup player
+	player_x_tile = PLAYER_START_X;
+	speed.w = PLAYER_INITIAL_SPEED;
 
 	// load background
 	set_bkg_data(0, 2, maptiles);
-	set_bkg_tiles( 0, 0, lvl0_map.width, lvl0_map.height, lvl0_map.data);
+	set_bkg_tiles(0, 0, lvl0_map.width, lvl0_map.height, lvl0_map.data);
 
 	// load sprite
 	set_sprite_data(0, 1, sprite);
 	set_sprite_tile(0, 0);
 }
-
-
-UBYTE prev_left;
-UBYTE prev_right;
 
 
 unsigned char row[32] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
@@ -60,6 +71,7 @@ void advance_brush_y()
  */
 void paint( UBYTE x )
 {
+	UBYTE free_tile = 0;
 	set_bkg_tiles( x, -player_y.b.h / 8, 1, 1, &free_tile );
 }
 
@@ -80,6 +92,8 @@ void draw_player()
 
 void gameplay(UBYTE joypad_state)
 {
+	UBYTE player_tile;
+
 	if(joypad_state & J_LEFT)
 	{
 		if( !prev_left && player_x_tile > 1 )
