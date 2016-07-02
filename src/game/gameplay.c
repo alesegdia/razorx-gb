@@ -35,7 +35,7 @@ brush_t brush;
 void game_start()
 {
 	// setup brushing
-	brush_initialize( &brush );
+	brush_initialize( brush, 1, 0x0300 );
 	scroll_counter.w = player_y.w;
 	last_brush_y = 0;
 
