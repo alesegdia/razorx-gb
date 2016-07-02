@@ -133,11 +133,11 @@ void gameplay(UBYTE joypad_state)
 
 	if( player_tile == 0 )
 	{
-		//speed.w += 0x0010;
+		speed.w += INCREASE_ACCEL;
 	}
-	else if( speed.w > 0x0050 )
+	else if( speed.w > PLAYER_INITIAL_SPEED )
 	{
-		//speed.w -= 0x0001;
+		speed.w -= DECREASE_ACCEL;
 	}
 
 	move_bkg(0, -player_y.b.h);
