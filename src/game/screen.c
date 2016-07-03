@@ -1,5 +1,6 @@
 #include "screen.h"
 
+
 void screen_init( screen_t* screen )
 {
 	disable_interrupts();
@@ -18,5 +19,11 @@ void screen_init( screen_t* screen )
 void screen_loop( screen_t* screen )
 {
 	screen->loop_callback();
+}
+
+void screen_change( screen_t* new_screen )
+{
+	current_screen = new_screen;
+	screen_init( current_screen );
 }
 
