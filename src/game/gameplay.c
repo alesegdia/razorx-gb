@@ -118,7 +118,7 @@ void gameplay()
 	player_y.w += speed.w;
 	scroll_counter.w += speed.w;
 
-	get_bkg_tiles( player_x_tile - 1, player_y.b.h / 8, 1, 1, &player_tile );
+	get_bkg_tiles( player_x_tile - 1, player_y.b.h / 8 + 2, 1, 1, &player_tile );
 
 	while( scroll_counter.w > 0x0800 )
 	{
