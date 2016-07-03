@@ -51,8 +51,7 @@ void game_start()
 
 	// load sprite
 	// negate( sprite, 16 );
-	randomize( sprite, 16 );
-	shuffle( sprite, 16 );
+	// shuffle( sprite2, 16 );
 	set_sprite_data(0, 1, sprite);
 	set_sprite_tile(0, 0);
 }
