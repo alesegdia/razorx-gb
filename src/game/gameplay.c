@@ -129,10 +129,14 @@ void gameplay(UBYTE joypad_state)
 			shuffle( sprite, 16 );
 			randomize( sprite, 16 );
 			set_sprite_data(0, 1, sprite);
+
+			randomize( maptiles, 32 );
+			set_bkg_data(0, 2, maptiles);
 		}
 		else
 		{
 			set_sprite_data(0, 1, sprite2);
+			set_bkg_data(0, 2, maptiles2);
 		}
 	}
 
