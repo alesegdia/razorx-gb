@@ -17,7 +17,6 @@ void screen_init( screen_t* screen )
 
 void screen_loop( screen_t* screen )
 {
-	UBYTE joypad_state = joypad();
-	gameplay(joypad_state);
+	screen->loop_callback();
 }
 

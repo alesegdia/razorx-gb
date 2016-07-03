@@ -84,8 +84,9 @@ void draw_player()
 }
 
 
-void gameplay(UBYTE joypad_state)
+void gameplay()
 {
+	UBYTE joypad_state = joypad();
 	UBYTE player_tile;
 
 	if(joypad_state & J_LEFT)
