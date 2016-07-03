@@ -51,7 +51,7 @@ void game_start()
 
 	// load sprite
 	// negate( sprite, 16 );
-	// randomize( sprite, 16 );
+	randomize( sprite, 16 );
 	shuffle( sprite, 16 );
 	set_sprite_data(0, 1, sprite);
 	set_sprite_tile(0, 0);
@@ -118,13 +118,24 @@ void gameplay(UBYTE joypad_state)
 	player_y.w += speed.w;
 	scroll_counter.w += speed.w;
 
+	get_bkg_tiles( player_x_tile - 1, player_y.b.h / 8, 1, 1, &player_tile );
+
 	while( scroll_counter.w > 0x0800 )
 	{
 		scroll_counter.w -= 0x0800;
 		scroll();
+		if( player_tile != 0 )
+		{
+			shuffle( sprite, 16 );
+			randomize( sprite, 16 );
+			set_sprite_data(0, 1, sprite);
+		}
+		else
+		{
+			set_sprite_data(0, 1, sprite2);
+		}
 	}
 
-	get_bkg_tiles( player_x_tile - 1, player_y.b.h / 8, 1, 1, &player_tile );
 
 	if( player_tile == 0 )
 	{

@@ -15,7 +15,7 @@ void randomize( unsigned char* data, UBYTE size )
 	UBYTE i;
 	for( i = 0; i < size; i++ )
 	{
-		data[i] = data[i] & rand();
+		data[i] = rand();
 	}
 }
 
