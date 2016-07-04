@@ -32,6 +32,9 @@ fixed scroll_counter;
 
 painter_t painter;
 
+UBYTE last_player_tile;
+UBYTE player_tile;
+
 void game_start()
 {
 	initrand(0xDEAD);
@@ -54,6 +57,9 @@ void game_start()
 	// shuffle( sprite2, 16 );
 	set_sprite_data(0, 1, sprite);
 	set_sprite_tile(0, 0);
+
+	player_tile = 1;
+	last_player_tile = 1;
 }
 
 
@@ -87,7 +93,6 @@ void draw_player()
 UBYTE gameplay()
 {
 	UBYTE joypad_state = joypad();
-	UBYTE player_tile;
 
 	if(joypad_state & J_LEFT)
 	{
@@ -118,12 +123,17 @@ UBYTE gameplay()
 	player_y.w += speed.w;
 	scroll_counter.w += speed.w;
 
-	get_bkg_tiles( player_x_tile - 1, player_y.b.h / 8 + 2, 1, 1, &player_tile );
+	last_player_tile = player_tile;
+	get_bkg_tiles( player_x_tile - 1, player_y.b.h / 8, 1, 1, &player_tile );
 
 	while( scroll_counter.w > 0x0800 )
 	{
 		scroll_counter.w -= 0x0800;
 		scroll();
+	}
+
+	if( player_tile != last_player_tile )
+	{
 		if( player_tile != 0 )
 		{
 			shuffle( sprite, 16 );
@@ -139,7 +149,6 @@ UBYTE gameplay()
 			set_bkg_data(0, 2, maptiles2);
 		}
 	}
-
 
 	if( player_tile == 0 )
 	{
