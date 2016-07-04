@@ -84,7 +84,7 @@ void draw_player()
 }
 
 
-void gameplay()
+UBYTE gameplay()
 {
 	UBYTE joypad_state = joypad();
 	UBYTE player_tile;
@@ -153,5 +153,7 @@ void gameplay()
 	move_bkg(0, -player_y.b.h);
 
 	draw_player();
+
+	return 0;
 }
 

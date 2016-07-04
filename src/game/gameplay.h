@@ -5,6 +5,6 @@
 #include <gb/gb.h>
 
 void game_start();
-void gameplay();
+UBYTE gameplay();
 
 #endif

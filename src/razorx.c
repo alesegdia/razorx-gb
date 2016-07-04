@@ -8,7 +8,7 @@
 #include "game/splash.h"
 #include "game/screen.h"
 
-UBYTE joypad_state;
+UBYTE ret;
 
 screen_t gameplay_scrn;
 screen_t splash_scrn;
@@ -16,6 +16,7 @@ screen_t splash_scrn;
 
 // to be able to use WORD, we need to declare it
 // outside the main function
+screen_t* current_screen;
 
 void main()
 {
@@ -25,12 +26,24 @@ void main()
 	splash_scrn.init_callback = splash_start;
 	splash_scrn.loop_callback = splash_step;
 
-	screen_change( &gameplay_scrn );
+	current_screen = &splash_scrn;
+	screen_init( current_screen );
 
 	while(1)
 	{
 		wait_vbl_done();
-		screen_loop( &gameplay_scrn );
-		//screen_loop( current_screen );
+		ret = screen_loop( current_screen );
+
+		switch( ret )
+		{
+		case 1:
+			current_screen = &splash_scrn;
+			screen_init( current_screen );
+			break;
+		case 2:
+			current_screen = &gameplay_scrn;
+			screen_init( current_screen );
+			break;
+		}
 	}
 }

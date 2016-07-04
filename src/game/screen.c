@@ -16,14 +16,8 @@ void screen_init( screen_t* screen )
 	enable_interrupts();
 }
 
-void screen_loop( screen_t* screen )
+UBYTE screen_loop( screen_t* screen )
 {
-	screen->loop_callback();
-}
-
-void screen_change( screen_t* new_screen )
-{
-	current_screen = new_screen;
-	screen_init( current_screen );
+	return screen->loop_callback();
 }
 

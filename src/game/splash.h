@@ -4,6 +4,6 @@
 #include <gb/gb.h>
 
 void splash_start();
-void splash_step();
+UBYTE splash_step();
 
 #endif
