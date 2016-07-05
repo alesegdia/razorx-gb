@@ -12,11 +12,11 @@ void brush_linear_translation( brush_t* brush )
 {
 	if( brush->sign == 0 )
 	{
-		brush->x.w += 0x10;
+		brush->x.w += 0x27;
 	}
 	else
 	{
-		brush->x.w -= 0x10;
+		brush->x.w -= 0x27;
 	}
 
 	if( brush->sign == 0 && brush->x.w >= 0x1200 )
