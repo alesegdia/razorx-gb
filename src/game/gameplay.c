@@ -93,6 +93,7 @@ void draw_player()
 UBYTE gameplay()
 {
 	UBYTE joypad_state = joypad();
+	UBYTE final_player_y_tile;
 
 	if(joypad_state & J_LEFT)
 	{
@@ -124,7 +125,19 @@ UBYTE gameplay()
 	scroll_counter.w += speed.w;
 
 	last_player_tile = player_tile;
-	get_bkg_tiles( player_x_tile - 1, player_y.b.h / 8, 1, 1, &player_tile );
+	final_player_y_tile = player_y.b.h / 8;
+
+#define BASE_Y 14
+	if( final_player_y_tile <= BASE_Y )
+	{
+		final_player_y_tile = BASE_Y - player_y.b.h / 8;
+	}
+	else
+	{
+		final_player_y_tile = 32 - player_y.b.h/8 + BASE_Y;
+	}
+
+	get_bkg_tiles( player_x_tile - 1, final_player_y_tile, 1, 1, &player_tile );
 
 	while( scroll_counter.w > 0x0800 )
 	{
